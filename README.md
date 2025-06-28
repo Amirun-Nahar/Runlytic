@@ -2,6 +2,9 @@
 
 A full-stack web application for managing marathon events, connecting organizers with participants.
 
+![image](https://github.com/user-attachments/assets/30b88100-7c05-4352-9ba4-0c5f6b8baad8)
+
+
 🌐 Live Site: [RunLytic](https://runlytic-marathon.netlify.app/)
 
 ## Features
