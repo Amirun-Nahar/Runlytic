@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { TextInput, Select } from 'flowbite-react';
-import { HiSearch } from 'react-icons/hi';
+import { TextInput, Select, Button } from 'flowbite-react';
+import { HiSearch, HiFilter } from 'react-icons/hi';
 import { useTheme } from '../contexts/ThemeContext';
 import axiosSecure from '../utils/axiosSecure';
 import MarathonCard from '../components/MarathonCard';
@@ -15,6 +15,7 @@ interface Marathon {
   image: string;
   runningDistance: string;
   totalRegistrations: number;
+  price: number;
 }
 
 const Marathons = () => {
@@ -22,9 +23,12 @@ const Marathons = () => {
   const [searchTitle, setSearchTitle] = useState('');
   const [sortBy, setSortBy] = useState('date');
   const [distance, setDistance] = useState('all');
+  const [priceRange, setPriceRange] = useState('all');
+  const [location, setLocation] = useState('all');
+  const [showFilters, setShowFilters] = useState(false);
 
   const { data: marathons = [], isLoading } = useQuery<Marathon[]>({
-    queryKey: ['marathons', searchTitle, sortBy, distance],
+    queryKey: ['marathons', searchTitle, sortBy, distance, priceRange, location],
     queryFn: async () => {
       const response = await axiosSecure.get('/marathons');
       return response.data;
@@ -35,17 +39,35 @@ const Marathons = () => {
     .filter((marathon) => {
       const titleMatch = marathon.title.toLowerCase().includes(searchTitle.toLowerCase());
       const distanceMatch = distance === 'all' || marathon.runningDistance === distance;
-      return titleMatch && distanceMatch;
+      const locationMatch = location === 'all' || marathon.location.toLowerCase().includes(location.toLowerCase());
+      const priceMatch = priceRange === 'all' || 
+        (priceRange === 'under50' && marathon.price < 50) ||
+        (priceRange === '50to100' && marathon.price >= 50 && marathon.price <= 100) ||
+        (priceRange === 'over100' && marathon.price > 100);
+      
+      return titleMatch && distanceMatch && locationMatch && priceMatch;
     })
     .sort((a, b) => {
-      if (sortBy === 'date') {
-        return new Date(b.marathonStartDate).getTime() - new Date(a.marathonStartDate).getTime();
-      } else if (sortBy === 'title') {
-        return a.title.localeCompare(b.title);
-      } else if (sortBy === 'registrations') {
-        return b.totalRegistrations - a.totalRegistrations;
+      switch (sortBy) {
+        case 'date':
+          return new Date(b.marathonStartDate).getTime() - new Date(a.marathonStartDate).getTime();
+        case 'dateAsc':
+          return new Date(a.marathonStartDate).getTime() - new Date(b.marathonStartDate).getTime();
+        case 'title':
+          return a.title.localeCompare(b.title);
+        case 'titleDesc':
+          return b.title.localeCompare(a.title);
+        case 'registrations':
+          return b.totalRegistrations - a.totalRegistrations;
+        case 'registrationsAsc':
+          return a.totalRegistrations - b.totalRegistrations;
+        case 'priceAsc':
+          return a.price - b.price;
+        case 'priceDesc':
+          return b.price - a.price;
+        default:
+          return 0;
       }
-      return 0;
     });
 
   if (isLoading) {
@@ -69,63 +91,103 @@ const Marathons = () => {
           Upcoming Marathons
         </h1>
 
-        <div className="flex flex-col md:flex-row gap-4 mb-8 items-end">
-          <div className="flex-1">
-            <TextInput
-              icon={HiSearch}
-              placeholder="Search marathons..."
-              value={searchTitle}
-              onChange={(e) => setSearchTitle(e.target.value)}
-              className="font-poppins"
-              theme={{
-                field: {
-                  input: {
-                    base: `bg-${isDarkMode ? 'gray-800/90' : 'white/90'} backdrop-blur-sm border-${isDarkMode ? 'gray-600' : 'gray-300'} rounded-lg focus:ring-2 focus:ring-marathon-secondary transition-all duration-300`,
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex flex-col md:flex-row gap-4 items-end">
+            <div className="flex-1">
+              <TextInput
+                icon={HiSearch}
+                placeholder="Search marathons..."
+                value={searchTitle}
+                onChange={(e) => setSearchTitle(e.target.value)}
+                className="font-poppins"
+                theme={{
+                  field: {
+                    input: {
+                      base: `bg-${isDarkMode ? 'gray-800/90' : 'white/90'} backdrop-blur-sm border-${isDarkMode ? 'gray-600' : 'gray-300'} rounded-lg focus:ring-2 focus:ring-marathon-secondary transition-all duration-300`,
+                    }
                   }
-                }
-              }}
-            />
-          </div>
-          <div className="w-full md:w-48">
-            <Select 
-              value={sortBy} 
-              onChange={(e) => setSortBy(e.target.value)}
-              className="font-poppins"
-              theme={{
-                field: {
-                  select: {
-                    base: `bg-${isDarkMode ? 'gray-800/90' : 'white/90'} backdrop-blur-sm border-${isDarkMode ? 'gray-600' : 'gray-300'} rounded-lg focus:ring-2 focus:ring-marathon-secondary transition-all duration-300`,
+                }}
+              />
+            </div>
+            <div className="w-full md:w-48">
+              <Select 
+                value={sortBy} 
+                onChange={(e) => setSortBy(e.target.value)}
+                className="font-poppins"
+                theme={{
+                  field: {
+                    select: {
+                      base: `bg-${isDarkMode ? 'gray-800/90' : 'white/90'} backdrop-blur-sm border-${isDarkMode ? 'gray-600' : 'gray-300'} rounded-lg focus:ring-2 focus:ring-marathon-secondary transition-all duration-300`,
+                    }
                   }
-                }
-              }}
+                }}
+              >
+                <option value="date">Latest First</option>
+                <option value="dateAsc">Earliest First</option>
+                <option value="title">Title (A-Z)</option>
+                <option value="titleDesc">Title (Z-A)</option>
+                <option value="registrations">Most Popular</option>
+                <option value="registrationsAsc">Least Popular</option>
+                <option value="priceAsc">Price (Low to High)</option>
+                <option value="priceDesc">Price (High to Low)</option>
+              </Select>
+            </div>
+            <Button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`w-full md:w-auto ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-marathon-light hover:bg-gray-200'}`}
             >
-              <option value="date">Sort by Date</option>
-              <option value="title">Sort by Title</option>
-              <option value="registrations">Sort by Registrations</option>
-            </Select>
+              <HiFilter className="mr-2" />
+              {showFilters ? 'Hide Filters' : 'Show Filters'}
+            </Button>
           </div>
-          <div className="w-full md:w-48">
-            <Select 
-              value={distance} 
-              onChange={(e) => setDistance(e.target.value)}
-              className="font-poppins"
-              theme={{
-                field: {
-                  select: {
-                    base: `bg-${isDarkMode ? 'gray-800/90' : 'white/90'} backdrop-blur-sm border-${isDarkMode ? 'gray-600' : 'gray-300'} rounded-lg focus:ring-2 focus:ring-marathon-secondary transition-all duration-300`,
-                  }
-                }
-              }}
-            >
-              <option value="all">All Distances</option>
-              <option value="3k">3K</option>
-              <option value="10k">10K</option>
-              <option value="25k">25K</option>
-            </Select>
-          </div>
+
+          {showFilters && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 rounded-lg bg-opacity-50 backdrop-blur-sm bg-white dark:bg-gray-800">
+              <div>
+                <Select 
+                  value={distance} 
+                  onChange={(e) => setDistance(e.target.value)}
+                  className="font-poppins"
+                >
+                  <option value="all">All Distances</option>
+                  <option value="3k">3K</option>
+                  <option value="5k">5K</option>
+                  <option value="10k">10K</option>
+                  <option value="21k">Half Marathon (21K)</option>
+                  <option value="42k">Full Marathon (42K)</option>
+                </Select>
+              </div>
+              <div>
+                <Select 
+                  value={priceRange} 
+                  onChange={(e) => setPriceRange(e.target.value)}
+                  className="font-poppins"
+                >
+                  <option value="all">All Prices</option>
+                  <option value="under50">Under $50</option>
+                  <option value="50to100">$50 - $100</option>
+                  <option value="over100">Over $100</option>
+                </Select>
+              </div>
+              <div>
+                <Select 
+                  value={location} 
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="font-poppins"
+                >
+                  <option value="all">All Locations</option>
+                  <option value="new york">New York</option>
+                  <option value="london">London</option>
+                  <option value="tokyo">Tokyo</option>
+                  <option value="paris">Paris</option>
+                  <option value="berlin">Berlin</option>
+                </Select>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredMarathons.map((marathon) => (
             <MarathonCard key={marathon._id} marathon={marathon} />
           ))}

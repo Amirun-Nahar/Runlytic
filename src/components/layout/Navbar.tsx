@@ -21,10 +21,10 @@ const Navbar = () => {
   return (
     <FlowbiteNavbar
       fluid
-      className={`fixed w-full z-50 border-b ${
+      className={`sticky top-0 w-full z-50 border-b mx-auto max-w-[1920px] px-4 backdrop-blur-md bg-opacity-90 shadow-sm ${
         isDarkMode 
-          ? 'bg-marathon-dark border-gray-700 text-white' 
-          : 'bg-white border-gray-200 text-marathon-primary'
+          ? 'bg-gradient-to-r from-marathon-primary/90 to-marathon-dark/90 border-gray-700 text-white' 
+          : 'bg-gradient-to-r from-marathon-light/95 to-white/95 border-gray-200 text-marathon-primary'
       }`}
     >
       <FlowbiteNavbar.Brand as={Link} to="/" className="flex items-center">
@@ -123,16 +123,46 @@ const Navbar = () => {
           to="/marathons"
           className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
         >
-          Marathons
+          All Marathons
+        </FlowbiteNavbar.Link>
+        <FlowbiteNavbar.Link
+          as={Link}
+          to="/about"
+          className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
+        >
+          About Us
+        </FlowbiteNavbar.Link>
+        <FlowbiteNavbar.Link
+          as={Link}
+          to="/contact"
+          className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
+        >
+          Contact
         </FlowbiteNavbar.Link>
         {user && (
-          <FlowbiteNavbar.Link
-            as={Link}
-            to="/dashboard"
-            className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
-          >
-            Dashboard
-          </FlowbiteNavbar.Link>
+          <>
+            <FlowbiteNavbar.Link
+              as={Link}
+              to="/dashboard"
+              className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
+            >
+              Dashboard
+            </FlowbiteNavbar.Link>
+            <FlowbiteNavbar.Link
+              as={Link}
+              to="/dashboard/add-marathon"
+              className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
+            >
+              Add Marathon
+            </FlowbiteNavbar.Link>
+            <FlowbiteNavbar.Link
+              as={Link}
+              to="/dashboard/my-marathons"
+              className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
+            >
+              My Marathons
+            </FlowbiteNavbar.Link>
+          </>
         )}
       </FlowbiteNavbar.Collapse>
     </FlowbiteNavbar>

@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import axiosSecure from '../utils/axiosSecure';
 import MarathonCard from '../components/MarathonCard';
 import { Link } from 'react-router-dom';
-import { Button, Carousel } from 'flowbite-react';
+import { Button, Carousel, Card, TextInput } from 'flowbite-react';
 import { Helmet } from 'react-helmet-async';
-import { HiOutlineLocationMarker, HiOutlineCalendar, HiOutlineLightningBolt, HiOutlineUserGroup, HiOutlineBadgeCheck } from 'react-icons/hi';
+import { HiOutlineMail } from 'react-icons/hi';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -123,8 +123,8 @@ const Home = () => {
         <title>Home - RunLytic</title>
       </Helmet>
 
-      {/* Banner Carousel */}
-      <div className="h-[85vh]">
+      {/* Banner Carousel - Height adjusted to 60-70% */}
+      <div className="h-[65vh]">
         <Carousel slideInterval={5000}>
           {bannerSlides.map((slide, index) => (
             <div key={index} className="relative h-full bg-marathon-dark">
@@ -138,7 +138,7 @@ const Home = () => {
               <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-r from-marathon-dark to-transparent' : 'bg-gradient-to-r from-marathon-primary/95 to-marathon-primary/70'}`} />
               <div className="relative max-w-7xl mx-auto px-4 h-full flex items-center">
                 <div className="max-w-2xl">
-                  <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+                  <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
                     {slide.title.split(' ').map((word, i, arr) => 
                       i === arr.length - 1 ? 
                         <span key={i} className={`${isDarkMode ? 'text-marathon-secondary' : 'text-marathon-light'} drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]`}>{word} </span> : 
@@ -175,18 +175,32 @@ const Home = () => {
         </Carousel>
       </div>
 
-      {/* Featured Marathons Section */}
-      <div className="py-20 relative">
-        {/* Background overlay with gradient patterns */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className={`absolute -top-[40%] -right-[40%] w-[80%] h-[80%] rounded-full blur-3xl ${
-            isDarkMode ? 'bg-marathon-dark-primary/20' : 'bg-marathon-primary/20'
-          }`} />
-          <div className={`absolute -bottom-[40%] -left-[40%] w-[80%] h-[80%] rounded-full blur-3xl ${
-            isDarkMode ? 'bg-marathon-dark-secondary/20' : 'bg-marathon-secondary/20'
-          }`} />
+      {/* Quick Stats Section */}
+      <div className={`py-16 ${isDarkMode ? 'bg-marathon-dark-secondary' : 'bg-marathon-light'}`}>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className={`text-4xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-marathon-secondary'}`}>50+</div>
+              <div className={`${isDarkMode ? 'text-white' : 'text-gray-600'}`}>Active Events</div>
+            </div>
+            <div className="text-center">
+              <div className={`text-4xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-marathon-secondary'}`}>10K+</div>
+              <div className={`${isDarkMode ? 'text-white' : 'text-gray-600'}`}>Registered Runners</div>
+            </div>
+            <div className="text-center">
+              <div className={`text-4xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-marathon-secondary'}`}>95%</div>
+              <div className={`${isDarkMode ? 'text-white' : 'text-gray-600'}`}>Success Rate</div>
+            </div>
+            <div className="text-center">
+              <div className={`text-4xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-marathon-secondary'}`}>4.8/5</div>
+              <div className={`${isDarkMode ? 'text-white' : 'text-gray-600'}`}>User Rating</div>
+            </div>
+          </div>
         </div>
+      </div>
 
+      {/* Featured Marathons Section - 4 cards per row */}
+      <div className="py-20 relative">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold mb-4 font-playfair bg-gradient-to-r from-marathon-primary via-marathon-secondary to-marathon-accent bg-clip-text text-transparent drop-shadow-[0_1px_1px_rgba(0,0,0,0.1)]">
@@ -197,26 +211,88 @@ const Home = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredMarathons?.slice(0, 6).map((marathon: any) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredMarathons?.slice(0, 8).map((marathon: any) => (
               <MarathonCard key={marathon._id} marathon={marathon} />
             ))}
           </div>
         </div>
       </div>
 
-      {/* Upcoming Marathons Section */}
-      <div className="py-20 relative">
-        {/* Background overlay with gradient patterns */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className={`absolute -top-[40%] -right-[40%] w-[80%] h-[80%] rounded-full blur-3xl ${
-            isDarkMode ? 'bg-marathon-dark-primary/20' : 'bg-marathon-primary/20'
-          }`} />
-          <div className={`absolute -bottom-[40%] -left-[40%] w-[80%] h-[80%] rounded-full blur-3xl ${
-            isDarkMode ? 'bg-marathon-dark-secondary/20' : 'bg-marathon-secondary/20'
-          }`} />
+      {/* Categories Section */}
+      <div className={`py-20 ${isDarkMode ? 'bg-marathon-dark' : 'bg-marathon-light'}`}>
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Marathon Categories</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300">Find the perfect race for your skill level</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="hover:shadow-lg transition-shadow duration-300">
+              <h3 className="text-2xl font-bold mb-4">Beginner Friendly</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">Perfect for first-time marathon runners</p>
+              <Button as={Link} to="/marathons?category=beginner">Explore</Button>
+            </Card>
+            <Card className="hover:shadow-lg transition-shadow duration-300">
+              <h3 className="text-2xl font-bold mb-4">Intermediate</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">For experienced runners looking for a challenge</p>
+              <Button as={Link} to="/marathons?category=intermediate">Explore</Button>
+            </Card>
+            <Card className="hover:shadow-lg transition-shadow duration-300">
+              <h3 className="text-2xl font-bold mb-4">Advanced</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">Challenging courses for elite runners</p>
+              <Button as={Link} to="/marathons?category=advanced">Explore</Button>
+            </Card>
+          </div>
         </div>
+      </div>
 
+      {/* Blog Section */}
+      <div className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Latest from Our Blog</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300">Running tips, success stories, and training advice</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {successStories.slice(0, 3).map((story, index) => (
+              <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
+                <img src={story.image} alt={story.name} className="w-full h-48 object-cover rounded-t-lg" />
+                <h3 className="text-xl font-bold mt-4">{story.name}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mt-2">{story.quote}</p>
+                <div className="mt-4">
+                  <Button as={Link} to="/blog">Read More</Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Newsletter Section */}
+      <div className={`py-20 ${isDarkMode ? 'bg-marathon-dark' : 'bg-marathon-light'}`}>
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl font-bold mb-4">Stay Updated</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
+              Subscribe to our newsletter for the latest marathon updates and training tips
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <TextInput
+                type="email"
+                placeholder="Enter your email"
+                icon={HiOutlineMail}
+                className="flex-1 max-w-md"
+              />
+              <Button className="bg-marathon-secondary hover:bg-marathon-accent">
+                Subscribe
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Upcoming Marathons Section - 4 cards per row */}
+      <div className="py-20 relative">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold mb-4 font-playfair bg-gradient-to-r from-marathon-primary via-marathon-secondary to-marathon-accent bg-clip-text text-transparent">
@@ -227,8 +303,8 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {upcomingMarathons?.slice(0, 6).map((marathon: any) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {upcomingMarathons?.slice(0, 8).map((marathon: any) => (
               <MarathonCard key={marathon._id} marathon={marathon} />
             ))}
           </div>
@@ -246,258 +322,24 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Features Section */}
+      {/* Essential Gear Section */}
       <div className={`py-20 ${isDarkMode ? 'bg-marathon-dark' : 'bg-marathon-light'}`}>
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="text-center">
-              <div className={`w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <HiOutlineLocationMarker className="w-8 h-8 text-marathon-secondary" />
-              </div>
-              <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-marathon-primary'}`}>
-                World-Class Locations
-              </h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
-                Experience running in carefully selected scenic routes across the globe
-              </p>
-            </div>
-            <div className="text-center">
-              <div className={`w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <HiOutlineCalendar className="w-8 h-8 text-marathon-secondary" />
-              </div>
-              <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-marathon-primary'}`}>
-                Easy Registration
-              </h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
-                Simple and secure registration process for all events
-              </p>
-            </div>
-            <div className="text-center">
-              <div className={`w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <HiOutlineLightningBolt className="w-8 h-8 text-marathon-secondary" />
-              </div>
-              <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-marathon-primary'}`}>
-                Runner Support
-              </h3>
-              <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
-                Dedicated support team to help you every step of the way
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Community Section */}
-      <div className={`py-20 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className={`text-4xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-marathon-primary'}`}>
-                Join Our Running Community
-              </h2>
-              <p className={`mb-8 text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                Connect with fellow runners, share experiences, and be part of a supportive community that celebrates every milestone.
-              </p>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-gray-800' : 'bg-marathon-light'}`}>
-                    <HiOutlineUserGroup className="w-6 h-6 text-marathon-secondary" />
-                  </div>
-                  <div>
-                    <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-marathon-primary'}`}>10K+</h4>
-                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Active Runners</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-gray-800' : 'bg-marathon-light'}`}>
-                    <HiOutlineBadgeCheck className="w-6 h-6 text-marathon-secondary" />
-                  </div>
-                  <div>
-                    <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-marathon-primary'}`}>50+</h4>
-                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>Events Yearly</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <img 
-                src="https://i.ibb.co/27gSycbB/image.png" 
-                alt="Running Community"
-                className="rounded-lg shadow-xl"
-              />
-              {!user && (
-                <div className="absolute -bottom-6 -left-6 bg-marathon-secondary text-white p-6 rounded-lg">
-                  <p className="text-2xl font-bold">Join Today</p>
-                  <p>Start your running journey</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Success Stories Section */}
-      <div className="py-20 relative">
-        {/* Background overlay with gradient patterns */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className={`absolute -top-[40%] -right-[40%] w-[80%] h-[80%] rounded-full blur-3xl ${
-            isDarkMode ? 'bg-marathon-dark-primary/20' : 'bg-marathon-primary/20'
-          }`} />
-          <div className={`absolute -bottom-[40%] -left-[40%] w-[80%] h-[80%] rounded-full blur-3xl ${
-            isDarkMode ? 'bg-marathon-dark-secondary/20' : 'bg-marathon-secondary/20'
-          }`} />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-4 font-playfair bg-gradient-to-r from-marathon-primary via-marathon-secondary to-marathon-accent bg-clip-text text-transparent">
-              Success Stories
-            </h2>
-            <p className="text-lg font-poppins text-gray-600 dark:text-gray-300">
-              Be inspired by runners who transformed their lives
-            </p>
+            <h2 className="text-4xl font-bold mb-4">Essential Running Gear</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300">Everything you need for a successful marathon</p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {successStories.map((story, index) => (
-              <div 
-                key={index} 
-                className={`rounded-xl overflow-hidden shadow-lg backdrop-blur-sm ${
-                  isDarkMode 
-                    ? 'bg-gray-900/85 text-marathon-light' 
-                    : 'bg-white/85 text-marathon-primary'
-                }`}
-              >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={story.image}
-                    alt={story.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2 font-playfair">{story.name}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 font-poppins">
-                    {story.age} • {story.location}
-                  </p>
-                  <p className="text-sm italic mb-4 font-poppins">"{story.quote}"</p>
-                  <div className="text-sm font-poppins">
-                    <p className="text-marathon-secondary font-semibold">{story.achievement}</p>
-                    <p className="text-gray-600 dark:text-gray-300">{story.story}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Essential Running Gear Section */}
-      <div className={`py-16 relative overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
-        {/* Background Pattern */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className={`absolute -top-1/2 -right-1/2 w-[100rem] h-[100rem] rounded-full ${
-            isDarkMode 
-              ? 'bg-gradient-to-br from-marathon-dark-primary/20 via-marathon-secondary/10 to-transparent' 
-              : 'bg-gradient-to-br from-marathon-light/50 via-marathon-primary/5 to-transparent'
-          }`} />
-          <div className={`absolute -bottom-1/2 -left-1/2 w-[100rem] h-[100rem] rounded-full ${
-            isDarkMode 
-              ? 'bg-gradient-to-tr from-marathon-dark-primary/20 via-marathon-secondary/10 to-transparent' 
-              : 'bg-gradient-to-tr from-marathon-light/50 via-marathon-primary/5 to-transparent'
-          }`} />
-          <div className="absolute inset-0 backdrop-blur-3xl" />
-        </div>
-
-        {/* Content */}
-        <div className="container mx-auto px-4 relative">
-          <div className="text-center mb-12">
-            <span className={`inline-block font-playfair text-lg mb-2 ${
-              isDarkMode ? 'text-marathon-secondary' : 'text-marathon-primary'
-            }`}>
-              For Your Journey
-            </span>
-            <h2 className={`text-5xl font-playfair font-bold mb-4 bg-gradient-to-r ${
-              isDarkMode 
-                ? 'from-marathon-secondary via-marathon-accent to-marathon-light text-transparent bg-clip-text' 
-                : 'from-marathon-primary via-marathon-secondary to-marathon-accent text-transparent bg-clip-text'
-            }`}>
-              Essential Running Gear
-            </h2>
-            <p className={`text-lg mb-6 max-w-2xl mx-auto font-light ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-              Quality gear that every marathon runner needs for success
-            </p>
-            <div className={`w-24 h-1 mx-auto bg-gradient-to-r ${
-              isDarkMode 
-                ? 'from-marathon-secondary via-marathon-accent to-marathon-light' 
-                : 'from-marathon-primary via-marathon-secondary to-marathon-accent'
-            }`} />
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {essentialGear.map((item, index) => (
-              <div 
-                key={index}
-                className={`group relative overflow-hidden rounded-xl transition-all duration-500 hover:shadow-lg ${
-                  isDarkMode 
-                    ? 'bg-gray-800/80 backdrop-blur-sm hover:shadow-marathon-secondary/20' 
-                    : 'bg-white/90 backdrop-blur-sm hover:shadow-marathon-primary/20'
-                }`}
-              >
-                <div className="aspect-[4/5] overflow-hidden">
-                  <img 
-                    src={item.image} 
-                    alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter blur-[0.5px] group-hover:blur-[1px]"
-                  />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${
-                    isDarkMode 
-                      ? 'from-gray-900/90 via-gray-900/70 to-gray-900/40' 
-                      : 'from-marathon-primary/90 via-marathon-primary/70 to-marathon-primary/40'
-                  } transition-opacity duration-500`} />
-                </div>
-
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-                  <h3 className={`font-playfair text-lg font-bold mb-3 px-3 py-1.5 rounded-lg ${
-                    isDarkMode 
-                      ? 'text-marathon-secondary bg-gray-900/85' 
-                      : 'text-marathon-primary bg-white/85'
-                  } backdrop-blur-sm shadow-lg`}>
-                    {item.name}
-                  </h3>
-                  <p className={`text-sm leading-relaxed line-clamp-3 font-medium max-w-[90%] px-3 py-2 rounded-lg relative ${
-                    isDarkMode 
-                      ? 'text-marathon-light bg-gray-900/85' 
-                      : 'text-marathon-primary bg-white/85'
-                  } backdrop-blur-sm shadow-lg before:content-['"'] before:absolute before:-left-1 before:-top-2 before:text-2xl before:opacity-70 after:content-['"'] after:absolute after:-right-1 after:-bottom-4 after:text-2xl after:opacity-70`}>
-                    {item.description}
-                  </p>
-                </div>
-              </div>
+              <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
+                <img src={item.image} alt={item.name} className="w-full h-48 object-cover rounded-t-lg" />
+                <h3 className="text-xl font-bold mt-4">{item.name}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mt-2">{item.description}</p>
+              </Card>
             ))}
           </div>
         </div>
       </div>
-
-      {/* CTA Section */}
-      {!user && (
-        <div className={`py-20 ${isDarkMode ? 'bg-marathon-dark-primary' : 'bg-marathon-primary'}`}>
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-4xl font-bold text-white mb-6">Ready to Start Your Journey?</h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Join our community of runners and discover your next challenge
-            </p>
-            <Button
-              as={Link}
-              to="/register"
-              size="xl"
-              className={`bg-marathon-secondary hover:bg-marathon-accent dark:bg-marathon-dark-secondary dark:hover:bg-marathon-dark-accent text-white transition-colors duration-300 text-lg px-8`}
-            >
-              Sign Up Now
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
