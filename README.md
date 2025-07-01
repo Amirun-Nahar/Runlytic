@@ -1,31 +1,9 @@
 # RunLytic - Marathon Management System
 
 <div align="center">
-  <img src="client/src/assets/logo.png" alt="RunLytic Logo" width="200"/>
   <p>A comprehensive full-stack web application for managing marathon events and connecting organizers with participants.</p>
 </div>
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/your-badge-id/deploy-status)](https://app.netlify.com/sites/runlytic-marathon/deploys)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-🌐 **Live Site**: [RunLytic](https://runlytic-marathon.netlify.app/)  
-📝 **API Documentation**: [API Docs](https://api.runlytic-marathon.com/docs)  
-💡 **Issue Tracker**: [GitHub Issues](https://github.com/yourusername/runlytic/issues)
-
-## Table of Contents
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Technology Stack](#technology-stack)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
-- [Project Structure](#project-structure)
-- [API Documentation](#api-documentation)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+🌐 **Live Site**: https://runlytic-marathon.netlify.app 
 
 ## Overview
 
