@@ -267,13 +267,6 @@ We welcome contributions! Please follow these steps:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact
-
-Project Maintainer - [Your Name](mailto:your.email@example.com)
-
-Project Link: [https://github.com/yourusername/runlytic](https://github.com/yourusername/runlytic)
-
----
 
 <div align="center">
   Made with ❤️ by the RunLytic Team
