@@ -19,6 +19,7 @@ RunLytic is a modern marathon management platform designed to streamline the org
 ## Key Features
 
 ### 🔐 User Authentication & Profile Management
+
 - **Multi-provider Authentication**
   - Email/Password authentication with validation
   - Social login integration (Google, Facebook)
