@@ -4,7 +4,7 @@
   <p>A comprehensive full-stack web application for managing marathon events and connecting organizers with participants.</p>
 </div>
 🌐 **Live Site**: https://runlytic-marathon.netlify.app 
-<p>
+<p top="5" gap="5">
   <a href="https://ibb.co/8LhTSqmZ"><img src="https://i.ibb.co/C3rNTgwG/r1.png" alt="r1" border="0"></a>
   <a href="https://ibb.co/zHjMjFFG"><img src="https://i.ibb.co/cXMBMwwD/r2.png" alt="r2" border="0"></a>
   <a href="https://ibb.co/0Wby6Y7"><img src="https://i.ibb.co/sDY9Nsf/r3.png" alt="r3" border="0"></a>
