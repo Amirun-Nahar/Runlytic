@@ -1,8 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Navbar as FlowbiteNavbar, Avatar } from 'flowbite-react';
+import { Navbar as FlowbiteNavbar, Avatar } from 'flowbite-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { HiSun, HiMoon } from 'react-icons/hi';
+import StandardButton from '../StandardButton';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -24,7 +25,7 @@ const Navbar = () => {
       className={`sticky top-0 w-full z-50 border-b mx-auto max-w-[1920px] px-4 backdrop-blur-md bg-opacity-90 shadow-sm ${
         isDarkMode 
           ? 'bg-gradient-to-r from-marathon-primary/90 to-marathon-dark/90 border-gray-700 text-white' 
-          : 'bg-gradient-to-r from-marathon-light/95 to-white/95 border-gray-200 text-marathon-primary'
+          : 'bg-gradient-to-r from-marathon-accent/95 to-white/95 border-gray-200 text-marathon-primary'
       }`}
     >
       <FlowbiteNavbar.Brand as={Link} to="/" className="flex items-center">
@@ -43,12 +44,13 @@ const Navbar = () => {
       </FlowbiteNavbar.Brand>
 
       <div className="flex items-center gap-2 md:order-2">
-        <Button
+        <StandardButton
+          variant="filled"
           onClick={toggleTheme}
           className={`p-2.5 rounded-full transition-all duration-300 transform hover:scale-110 hover:rotate-12 ring-1 ${
             isDarkMode
               ? 'bg-gradient-to-r from-marathon-dark to-gray-800 hover:from-gray-800 hover:to-marathon-dark text-yellow-400 hover:text-yellow-300 ring-gray-600 shadow-lg shadow-marathon-dark/30'
-              : 'bg-gradient-to-r from-marathon-light to-white hover:from-white hover:to-marathon-light text-marathon-primary hover:text-marathon-secondary ring-marathon-primary/20 shadow-md shadow-marathon-primary/20'
+              : 'bg-gradient-to-r from-marathon-accent to-white hover:from-white hover:to-marathon-accent text-marathon-primary hover:text-marathon-secondary ring-marathon-primary/20 shadow-md shadow-marathon-primary/20'
           }`}
         >
           {isDarkMode ? (
@@ -56,7 +58,7 @@ const Navbar = () => {
           ) : (
             <HiMoon className="w-6 h-6 transform transition-transform" />
           )}
-        </Button>
+        </StandardButton>
         
         {user ? (
           <div className="flex items-center gap-4">
@@ -78,33 +80,34 @@ const Navbar = () => {
                 </div>
               </div>
             </div>
-            <Button
+            <StandardButton
+              variant="filled"
               onClick={handleLogout}
-              className="bg-marathon-secondary hover:bg-marathon-accent text-white"
             >
               Logout
-            </Button>
+            </StandardButton>
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            <Button
+            <StandardButton
+              variant="filled"
               as={Link}
               to="/login"
               className={
                 isDarkMode 
                   ? 'bg-gray-700 hover:bg-gray-600 text-white' 
-                  : 'bg-marathon-light hover:bg-gray-200 text-marathon-primary'
+                  : 'bg-marathon-accent hover:bg-gray-200 text-marathon-primary'
               }
             >
               Login
-            </Button>
-            <Button
+            </StandardButton>
+            <StandardButton
+              variant="filled"
               as={Link}
               to="/register"
-              className="bg-marathon-secondary hover:bg-marathon-accent text-white"
             >
               Register
-            </Button>
+            </StandardButton>
           </div>
         )}
         <FlowbiteNavbar.Toggle className="ml-3" />
