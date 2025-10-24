@@ -2,6 +2,8 @@
 
 A modern, responsive web application for marathon management, training tracking, and race recommendations built with React, TypeScript, and Vite.
 
+## Live Link: https://runlytic-marathon.netlify.app/
+
 ## ✨ Features
 
 ### 🏠 **Home & Discovery**
