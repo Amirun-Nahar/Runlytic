@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axiosSecure from '../utils/axiosSecure';
 import MarathonCard from '../components/MarathonCard';
+import OfflineFallback from '../components/OfflineFallback';
 import { Link } from 'react-router-dom';
 import { Button, Carousel, Card, TextInput } from 'flowbite-react';
 import { Helmet } from 'react-helmet-async';
@@ -11,21 +12,50 @@ import { useTheme } from '../contexts/ThemeContext';
 const Home = () => {
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
-  const { data: featuredMarathons } = useQuery({
+  const { data: featuredMarathons, error: featuredError, isLoading: featuredLoading } = useQuery({
     queryKey: ['featuredMarathons'],
     queryFn: async () => {
       const response = await axiosSecure.get('/marathons/featured');
       return response.data;
     },
+    retry: (failureCount, error) => {
+      if (error?.name === 'BackendLoadingError' || error?.message?.includes('Backend is still starting up')) {
+        return failureCount < 5; // Retry more times for backend loading
+      }
+      if (error?.name === 'NetworkError') {
+        return failureCount < 3; // Retry for network errors
+      }
+      return false;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const { data: upcomingMarathons } = useQuery({
+  const { data: upcomingMarathons, error: upcomingError, isLoading: upcomingLoading } = useQuery({
     queryKey: ['upcomingMarathons'],
     queryFn: async () => {
       const response = await axiosSecure.get('/marathons/upcoming');
       return response.data;
     },
+    retry: (failureCount, error) => {
+      if (error?.name === 'BackendLoadingError' || error?.message?.includes('Backend is still starting up')) {
+        return failureCount < 5; // Retry more times for backend loading
+      }
+      if (error?.name === 'NetworkError') {
+        return failureCount < 3; // Retry for network errors
+      }
+      return false;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  // Show offline fallback if both API calls fail
+  if (featuredError && upcomingError) {
+    return <OfflineFallback />;
+  }
 
   const bannerSlides = [
     {
@@ -212,7 +242,34 @@ const Home = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredMarathons?.slice(0, 8).map((marathon: any) => (
+            {featuredLoading ? (
+              <div className="col-span-full text-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-marathon-primary mx-auto"></div>
+                <p className="mt-4 text-gray-600 dark:text-gray-400">Loading featured marathons...</p>
+              </div>
+            ) : featuredError ? (
+              <div className="col-span-full text-center py-8">
+                <div className="text-red-500 mb-4">
+                  <svg className="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400 mb-2">
+                  {featuredError?.name === 'BackendLoadingError' 
+                    ? 'Server is starting up. Please wait a moment and refresh the page.'
+                    : featuredError?.name === 'NetworkError'
+                    ? 'Unable to connect to server. Please check your internet connection.'
+                    : 'Unable to load featured marathons. Please try again later.'
+                  }
+                </p>
+                <button 
+                  onClick={() => window.location.reload()} 
+                  className="text-marathon-primary hover:text-marathon-secondary underline"
+                >
+                  Refresh Page
+                </button>
+              </div>
+            ) : featuredMarathons?.slice(0, 8).map((marathon: any) => (
               <MarathonCard key={marathon._id} marathon={marathon} />
             ))}
           </div>
@@ -304,7 +361,34 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {upcomingMarathons?.slice(0, 8).map((marathon: any) => (
+            {upcomingLoading ? (
+              <div className="col-span-full text-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-marathon-primary mx-auto"></div>
+                <p className="mt-4 text-gray-600 dark:text-gray-400">Loading upcoming marathons...</p>
+              </div>
+            ) : upcomingError ? (
+              <div className="col-span-full text-center py-8">
+                <div className="text-red-500 mb-4">
+                  <svg className="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400 mb-2">
+                  {upcomingError?.name === 'BackendLoadingError' 
+                    ? 'Server is starting up. Please wait a moment and refresh the page.'
+                    : upcomingError?.name === 'NetworkError'
+                    ? 'Unable to connect to server. Please check your internet connection.'
+                    : 'Unable to load upcoming marathons. Please try again later.'
+                  }
+                </p>
+                <button 
+                  onClick={() => window.location.reload()} 
+                  className="text-marathon-primary hover:text-marathon-secondary underline"
+                >
+                  Refresh Page
+                </button>
+              </div>
+            ) : upcomingMarathons?.slice(0, 8).map((marathon: any) => (
               <MarathonCard key={marathon._id} marathon={marathon} />
             ))}
           </div>

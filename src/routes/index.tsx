@@ -13,6 +13,9 @@ import Contact from '../pages/Contact';
 import NotFound from '../pages/NotFound';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import Terms from '../pages/Terms';
+import TrainingDashboard from '../pages/TrainingDashboard';
+import MarathonRecommendations from '../pages/MarathonRecommendations';
+import ProgressTracking from '../pages/ProgressTracking';
 import { Suspense } from 'react';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -71,6 +74,30 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             {withSuspense(Dashboard)}
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/training',
+        element: (
+          <PrivateRoute>
+            {withSuspense(TrainingDashboard)}
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/recommendations',
+        element: (
+          <PrivateRoute>
+            {withSuspense(MarathonRecommendations)}
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/progress',
+        element: (
+          <PrivateRoute>
+            {withSuspense(ProgressTracking)}
           </PrivateRoute>
         ),
       },

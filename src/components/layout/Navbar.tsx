@@ -165,6 +165,27 @@ const Navbar = () => {
             >
               My Marathons
             </FlowbiteNavbar.Link>
+            <FlowbiteNavbar.Link
+              as={Link}
+              to="/training"
+              className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
+            >
+              Training
+            </FlowbiteNavbar.Link>
+            <FlowbiteNavbar.Link
+              as={Link}
+              to="/recommendations"
+              className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
+            >
+              Recommendations
+            </FlowbiteNavbar.Link>
+            <FlowbiteNavbar.Link
+              as={Link}
+              to="/progress"
+              className={isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-marathon-primary'}
+            >
+              Progress
+            </FlowbiteNavbar.Link>
           </>
         )}
       </FlowbiteNavbar.Collapse>

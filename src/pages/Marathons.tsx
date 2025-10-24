@@ -27,12 +27,21 @@ const Marathons = () => {
   const [location, setLocation] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
 
-  const { data: marathons = [], isLoading } = useQuery<Marathon[]>({
+  const { data: marathons = [], isLoading, error } = useQuery<Marathon[]>({
     queryKey: ['marathons', searchTitle, sortBy, distance, priceRange, location],
     queryFn: async () => {
       const response = await axiosSecure.get('/marathons');
       return response.data;
-    }
+    },
+    retry: (failureCount, error) => {
+      // Retry up to 3 times if backend is still loading
+      if (error?.message?.includes('Backend is still starting up')) {
+        return failureCount < 3;
+      }
+      return false;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+    refetchOnWindowFocus: false,
   });
 
   const filteredMarathons = marathons
@@ -72,6 +81,28 @@ const Marathons = () => {
 
   if (isLoading) {
     return <LoadingBar />;
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Error Loading Marathons</h2>
+          <p className="text-gray-600 mb-4">
+            {error instanceof Error ? error.message : 'Failed to load marathons'}
+          </p>
+          <p className="text-sm text-gray-500">
+            API URL: {import.meta.env.VITE_API_URL}
+          </p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (

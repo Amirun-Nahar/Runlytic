@@ -41,7 +41,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return response.data.token;
     } catch (error) {
       console.error('Error getting custom token:', error);
-      throw error;
+      // Don't throw error, just return null to allow app to continue
+      return null;
     }
   };
 
@@ -52,8 +53,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
           // Get custom JWT token from our server
           const token = await getCustomToken(currentUser);
-          // Store it in localStorage
-          localStorage.setItem('access-token', token);
+          if (token) {
+            // Store it in localStorage
+            localStorage.setItem('access-token', token);
+          }
         } catch (error) {
           console.error('Error setting token:', error);
           localStorage.removeItem('access-token');
@@ -65,7 +68,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    // Add a timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -127,7 +138,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {loading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-marathon-primary mx-auto"></div>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+          </div>
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };

@@ -120,9 +120,11 @@ const MyMarathons = () => {
                           ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
                           : marathon.status === 'ongoing'
                           ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                          : marathon.status === 'completed'
+                          ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
                           : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                       }`}>
-                        {marathon.status.charAt(0).toUpperCase() + marathon.status.slice(1)}
+                        {marathon.status ? marathon.status.charAt(0).toUpperCase() + marathon.status.slice(1) : 'Unknown'}
                       </span>
                     </Table.Cell>
                     <Table.Cell>
